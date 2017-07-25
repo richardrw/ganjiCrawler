@@ -70,6 +70,7 @@ import requests
 import random
 import get_ipproxy
 from bs4 import BeautifulSoup
+from db_execute import insertItem
 
 headers = {
 	'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'
@@ -80,6 +81,7 @@ proxies = {'http':random.choice(proxyList)}
 
 #爬取某类下某一页的商品链接
 def getItemLinkFrom(url, num):
+	url = '%s/O%s/' %(url, num)
 	pageHtml = requests.get('url', headers=headers, proxie=proxies)
 	pageBsObj = BeautifulSoup(pageHtml.content, 'lxml')
 	hasItem = pageBsObj.select('div noinfotishi')
@@ -94,11 +96,14 @@ def getItemLinkFrom(url, num):
 			itemMsg = {'itemTitle':itemTitle, 'itemLink':itemLink}
 			#print itemMsg
 			itemList.append(itemMsg)
-		return itemList
+		yield itemList
+	#将itemList中的数据存储到数据库中
+	for item in itemList:
+		insertItem(itemList)
 
 #爬取某类下所有商品链接
 def getAllItemLinkFrom(url, num):
-	for pageNum in xrange(1, num+1):
+	for pageNum in xrange(2, num+1):
 		getItemLinkFrom(url, pageNum)
 
 
