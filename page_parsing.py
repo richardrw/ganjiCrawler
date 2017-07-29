@@ -70,7 +70,7 @@ import requests
 import random
 import get_ipproxy
 from bs4 import BeautifulSoup
-from db_execute import insertItem
+from db_execute import DbExecute
 
 headers = {
 	'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'
@@ -97,9 +97,9 @@ def getItemLinkFrom(url, num):
 			#print itemMsg
 			itemList.append(itemMsg)
 		yield itemList
-	#将itemList中的数据存储到数据库中
-	for item in itemList:
-		insertItem(itemList)
+	insertItem = DbExecute()
+	insertItem.insertItem(itemList)
+	
 
 #爬取某类下所有商品链接
 def getAllItemLinkFrom(url, num):

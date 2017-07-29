@@ -32,3 +32,4 @@ class DbExecute(object):
 			# 	print msg
 			yield self.table.find().limmit(count)
 
+
